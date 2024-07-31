@@ -8,7 +8,7 @@ export async function POST( req :Request,){
         const {title} = await req.json();
 
         await dbConnect();
-        
+
 
         if(!userId){
             return new NextResponse("Unauthhorized", {status:401});
@@ -34,3 +34,4 @@ export async function POST( req :Request,){
         return new  NextResponse("Internal Error", {status:500})
     }
 }
+
