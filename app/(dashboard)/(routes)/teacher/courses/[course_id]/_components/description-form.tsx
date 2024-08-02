@@ -27,10 +27,18 @@ const formSchema = z.object({
   }),
 });
 
+interface CourseData {
+    _id: string;
+    title?: string;
+    description?: string;
+    imageUrl?: string;
+    price?: string;
+    categoryId?: string;
+  }
+  
+
 interface DescriptionFormProps {
-  initialData: {
-    description: string;
-  };
+  initialData: CourseData;
   courseId: string;
 }
 export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {

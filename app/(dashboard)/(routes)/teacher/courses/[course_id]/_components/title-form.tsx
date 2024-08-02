@@ -24,11 +24,17 @@ const formSchema = z.object({
     message: "Title is required",
   }),
 });
+interface CourseData {
+  _id: string;
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+  price?: string;
+  categoryId?: string;
+}
 
 interface TitleFormProps {
-  initialData: {
-    title: string;
-  };
+  initialData: CourseData;
   courseId: string;
 }
 export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {

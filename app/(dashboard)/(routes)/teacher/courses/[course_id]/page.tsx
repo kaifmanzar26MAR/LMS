@@ -10,40 +10,51 @@ import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
 
+interface CourseData {
+  _id: string;
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+  price?: string;
+  categoryId?: string;
+}
+
 const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
   const router = useRouter();
-  const [courseData, setCourseData] = useState(null);
+  const [courseData, setCourseData] = useState<CourseData | null>(null);
+
   const fetchCourseData = async () => {
     try {
       const response = await axios.post("/api/get_a_course", {
         _id: params.course_id,
       });
-      if (!response) {
-        throw new Error("cant get response");
-      }
-      console.log(response.data);
 
-      setCourseData(response.data);
-      console.log(response.data.title);
+      if (response.status === 200 && response.data) {
+        setCourseData(response.data);
+      } else {
+        throw new Error("Invalid response");
+      }
     } catch (error) {
-      console.log("Something went wrong!", error);
-      toast.error("error");
+      console.error("Something went wrong!", error);
+      toast.error(`Error: ${"An error occurred"}`);
       router.push("/");
     }
   };
 
   useEffect(() => {
     fetchCourseData();
-  }, []);
+  }, [params.course_id]);
+
   if (!courseData) {
     return <>Loading..</>;
   }
+
   const requiredFields = [
-    courseData?.title,
-    courseData?.description,
-    courseData?.imageUrl,
-    courseData?.price,
-    courseData?.categoryId,
+    courseData.title,
+    courseData.description,
+    courseData.imageUrl,
+    courseData.price,
+    courseData.categoryId,
   ];
 
   const totalFields = requiredFields.length;
@@ -70,15 +81,15 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
           <TitleForm
             initialData={courseData}
             courseId={courseData._id}
-           />
+          />
           <DescriptionForm
             initialData={courseData}
             courseId={courseData._id}
-           />
+          />
           <ImageForm
             initialData={courseData}
             courseId={courseData._id}
-           />
+          />
         </div>
       </div>
     </div>
