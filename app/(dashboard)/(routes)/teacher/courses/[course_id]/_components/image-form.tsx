@@ -18,20 +18,22 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
-  title: z.string().min(1, {
-    message: "Title is required",
+  description: z.string().min(1, {
+    message: "Description is required",
   }),
 });
 
-interface TitleFormProps {
+interface ImageFormProps {
   initialData: {
-    title: string;
+    description: string;
   };
   courseId: string;
 }
-export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
+export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,20 +58,20 @@ export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course title
+        Course Description
       <Button variant="ghost" onClick={toggleEdit}>
         {isEditing && <>Cancel</>}
         {!isEditing && (
           <>
             <Pencil className="h-4 w-4 mr-2" />
-            Edit Title
+            Edit Description
           </>
         )}
       </Button>
       </div>
       {
         !isEditing && (
-            <p className="text-sm mt-2">{initialData?.title}</p>
+            <p className={cn("text-sm mt-2", !initialData.description && "text-slate-500 italic")}>{initialData?.description || "No Description"}</p>
         )
       }
       {
@@ -81,13 +83,13 @@ export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
                 >
                     <FormField 
                         control={form.control}
-                        name="title"
+                        name="description"
                         render={({field})=>(
                             <FormItem>
                                 <FormControl>
-                                    <Input
+                                    <Textarea
                                         disabled={isSubmitting}
-                                        placeholder="e.g. 'Advaced web development'"
+                                        placeholder="e.g. 'This course is about ...'"
                                         {...field}
                                     />
                                 </FormControl>

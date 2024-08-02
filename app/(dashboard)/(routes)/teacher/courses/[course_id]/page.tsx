@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { TitleForm } from "./_components/title-form";
+import { DescriptionForm } from "./_components/description-form";
+import { ImageForm } from "./_components/image-form";
 
 const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
   const router = useRouter();
@@ -66,6 +68,14 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
             <h2 className="text-xl">Customize your course</h2>
           </div>
           <TitleForm
+            initialData={courseData}
+            courseId={courseData._id}
+           />
+          <DescriptionForm
+            initialData={courseData}
+            courseId={courseData._id}
+           />
+          <ImageForm
             initialData={courseData}
             courseId={courseData._id}
            />
