@@ -22,7 +22,7 @@ interface CourseData {
 const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
   const router = useRouter();
   const [courseData, setCourseData] = useState<CourseData | null>(null);
-
+  const [allCategories, setALlCategories]=useState()
   const fetchCourseData = async () => {
     try {
       const response = await axios.post("/api/get_a_course", {
@@ -41,9 +41,28 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
     }
   };
 
+  const fetchAllCategories=async()=>{
+    try {
+      const response= await axios.get("/api/get_all_category");
+      if (response.status === 200 && response.data) {
+        console.log(response.data)
+        setALlCategories(response.data);
+      } else {
+        throw new Error("Invalid response");
+      }
+    } catch (error) {
+      console.log("Something went Worong!", error);
+      toast.error(`Error: ${"An error in fetching categories"}`);
+    }
+  }
+
   useEffect(() => {
     fetchCourseData();
+    fetchAllCategories();
   }, [params.course_id]);
+
+
+  
 
   if (!courseData) {
     return <>Loading..</>;

@@ -22,6 +22,10 @@ const courseSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    categoryId:{
+        type: Schema.Types.ObjectId,
+        ref:"Category"
+    }
 }, {
     timestamps: true,
 });
