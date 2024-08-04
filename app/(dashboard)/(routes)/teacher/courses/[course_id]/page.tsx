@@ -2,15 +2,16 @@
 
 import { IconBadge } from "@/components/icon-badge";
 import axios from "axios";
-import { LayoutDashboard } from "lucide-react";
+import { CircleDollarSign, LayoutDashboard, ListCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
+import { CategoryForm } from "./_components/category-form";
 
-interface CourseData {
+interface CourseDataProps {
   _id: string;
   title?: string;
   description?: string;
@@ -19,10 +20,15 @@ interface CourseData {
   categoryId?: string;
 }
 
+interface CategoryProps{
+  _id:string,
+  name:string
+}
+
 const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
   const router = useRouter();
-  const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const [allCategories, setALlCategories]=useState()
+  const [courseData, setCourseData] = useState<CourseDataProps | null>(null);
+  const [allCategories, setALlCategories]=useState([]);
   const fetchCourseData = async () => {
     try {
       const response = await axios.post("/api/get_a_course", {
@@ -109,6 +115,32 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
             initialData={courseData}
             courseId={courseData._id}
           />
+          <CategoryForm
+            initialData={courseData}
+            courseId={courseData._id}
+            options={allCategories.map((category:CategoryProps)=>({
+              label:category.name,
+              value: category._id
+            }))}
+          />
+        </div>
+        <div className="space-y-6">
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={ListCheck}/>
+              <h2 className="text-xl">Course Chapters</h2>
+            </div>
+            <div>
+              TODO: Chapters
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={CircleDollarSign}/>
+              <h2 className="text-xl">Sell your course</h2>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
