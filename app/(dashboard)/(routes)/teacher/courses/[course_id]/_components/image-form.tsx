@@ -20,7 +20,7 @@ interface CourseData {
   title?: string;
   description?: string;
   imageUrl?: string;
-  price?: string;
+  price?: number;
   categoryId?: string;
 }
 
