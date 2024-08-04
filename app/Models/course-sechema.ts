@@ -25,7 +25,11 @@ const courseSchema = new Schema({
     categoryId:{
         type: Schema.Types.ObjectId,
         ref:"Category"
-    }
+    },
+    attachments:[{
+        type:Schema.Types.ObjectId,
+        ref:"Attachment",
+    }]
 }, {
     timestamps: true,
 });

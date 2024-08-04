@@ -18,7 +18,11 @@ export async function POST( req :Request,){
             return new NextResponse("id is required!", {status: 401});
         }
 
-        const course= await Course.findOne({_id:_id});
+        const course= await Course.findOne({_id:_id}).populate({
+            path: 'attachments',
+            options: { sort: { createdAt: -1 } } ,
+            strictPopulate: false
+          });
 
         if(!course){
             return new NextResponse("No Course found by given id!", {status:401})

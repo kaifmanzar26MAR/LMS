@@ -2,7 +2,7 @@
 
 import { IconBadge } from "@/components/icon-badge";
 import axios from "axios";
-import { CircleDollarSign, LayoutDashboard, ListCheck } from "lucide-react";
+import { CircleDollarSign, File, LayoutDashboard, ListCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -11,14 +11,27 @@ import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
 import { CategoryForm } from "./_components/category-form";
 import { PriceForm } from "./_components/price-form";
+import { Attachment } from "./_components/attachment-form";
+
+interface AttachmentProps{
+  _id: string;
+  name:string;
+  courseId: string;
+  url: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 interface CourseDataProps {
   _id: string;
-  title?: string;
-  description?: string;
-  imageUrl?: string;
-  price?: number;
-  categoryId?: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+  categoryId: string;
+  attachments: AttachmentProps[];
+  createdAt:Date;
+  updatedAt:Date;
 }
 
 interface CategoryProps{
@@ -38,6 +51,7 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
 
       if (response.status === 200 && response.data) {
         setCourseData(response.data);
+        console.log(response.data);
       } else {
         throw new Error("Invalid response");
       }
@@ -140,12 +154,21 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
               <IconBadge icon={CircleDollarSign}/>
               <h2 className="text-xl">Sell your course</h2>
             </div>
+            <PriceForm
+            initialData={courseData}
+            courseId={courseData._id}
+            />
           </div>
-          <PriceForm
-          initialData={courseData}
-          courseId={courseData._id}
-          />
-
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={File}/>
+              <h2 className="text-xl">Resources and Attachments</h2>
+            </div>
+            <Attachment
+              initialData={courseData}
+              courseId={courseData._id}
+            />
+          </div>
         </div>
       </div>
     </div>
