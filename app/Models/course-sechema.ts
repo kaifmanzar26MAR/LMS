@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { Attachment } from "./attachment-schema";
 
 const courseSchema = new Schema({
     title: {
@@ -28,7 +29,7 @@ const courseSchema = new Schema({
     },
     attachments:[{
         type:Schema.Types.ObjectId,
-        ref:"Attachment",
+        ref:"Attachment"
     }]
 }, {
     timestamps: true,

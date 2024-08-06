@@ -17,12 +17,11 @@ export async function POST( req :Request,){
         if(title.trim('')===''){
             return new NextResponse("Title is required!", {status: 401});
         }
-        const attachments=[{}];
+        
 
         const newCourse= await Course.create({
             title,
             userId,
-            attachments:attachments
         });
 
         if(!newCourse){
