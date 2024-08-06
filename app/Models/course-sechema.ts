@@ -30,8 +30,20 @@ const courseSchema = new Schema({
     attachments:[{
         type:Schema.Types.ObjectId,
         ref:"Attachment"
-    }]
-}, {
+    }],
+    chapters:[
+        {
+            type:Schema.Types.ObjectId,
+            ref:"Chapter"
+        }
+    ],
+    pruchases:[
+        {
+            type:Schema.Types.ObjectId,
+            ref:"Purchase"
+        }
+    ]
+},{
     timestamps: true,
 });
 
