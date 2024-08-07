@@ -9,7 +9,6 @@ export async function POST( req :Request,){
 
         await dbConnect();
 
-
         if(!userId){
             return new NextResponse("Unauthhorized", {status:401});
         }
@@ -18,15 +17,12 @@ export async function POST( req :Request,){
             return new NextResponse("id is required!", {status: 401});
         }
 
-        const course= await Course.findOne({_id:_id}).populate({
-            path: 'attachments',
-            options: { sort: { createdAt: -1 } } ,
-            strictPopulate: false
-          });
+        const course= await Course.findOne({_id:_id})
 
         if(!course){
             return new NextResponse("No Course found by given id!", {status:401})
         }
+
         console.log(course)
         return NextResponse.json(course);
 

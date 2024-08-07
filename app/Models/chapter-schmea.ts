@@ -9,16 +9,18 @@ const chapterSchema= new Schema({
         trim:true,
         index:true
     },
+    courseId:{
+        type:Schema.Types.ObjectId,
+        ref:"Course"
+    },
     description:{
         type:String,
     },
     videoUrl:{
         type:String,
-        required:true
     },
     position:{
         type:Number,
-        required:true
     },
     isPublished:{
         type:Boolean,
@@ -30,8 +32,14 @@ const chapterSchema= new Schema({
         required:true,
         default:false
     },
-    muxData:MuxData,
-    useProgress:[UserProgress],
+    muxData:{
+        type:Schema.Types.ObjectId,
+        ref:"MuxData"
+    },
+    userProgress:[{
+        type:Schema.Types.ObjectId,
+        ref:"UserProgress"
+    }],
 },
 {
     timestamps:true

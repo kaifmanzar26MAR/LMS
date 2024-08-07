@@ -12,6 +12,7 @@ import { ImageForm } from "./_components/image-form";
 import { CategoryForm } from "./_components/category-form";
 import { PriceForm } from "./_components/price-form";
 import { Attachment } from "./_components/attachment-form";
+import { ChapterForm } from "./_components/chapters-form";
 
 interface AttachmentProps{
   _id: string;
@@ -22,6 +23,16 @@ interface AttachmentProps{
   updatedAt: Date;
 }
 
+interface ChapterProps{
+  _id:string,
+  title:string,
+  description:string,
+  videoUrl:string,
+  position:number,
+  isPublished:boolean,
+  isFree:boolean,
+}
+
 interface CourseDataProps {
   _id: string;
   title: string;
@@ -30,6 +41,7 @@ interface CourseDataProps {
   price: number;
   categoryId: string;
   attachments: AttachmentProps[];
+  chapters?:ChapterProps[];
   createdAt:Date;
   updatedAt:Date;
 }
@@ -95,6 +107,7 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
     courseData.imageUrl,
     courseData.price,
     courseData.categoryId,
+    courseData?.chapters?.some(chapter=>chapter.isPublished),
   ];
 
   const totalFields = requiredFields.length;
@@ -145,9 +158,10 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
               <IconBadge icon={ListCheck}/>
               <h2 className="text-xl">Course Chapters</h2>
             </div>
-            <div>
-              TODO: Chapters
-            </div>
+            <ChapterForm
+            initialData={courseData}
+            courseId={courseData._id}
+          />
           </div>
           <div>
             <div className="flex items-center gap-x-2">
