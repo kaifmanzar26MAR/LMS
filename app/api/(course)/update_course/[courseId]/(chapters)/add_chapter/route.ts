@@ -23,7 +23,7 @@ export async function POST(req:Request, {params}:{params:{courseId:string}}) {
             return new NextResponse("Unauthorized!!", {status:401})
         }
 
-        const newPossition= courseOwner.chapters.length + 1;
+        const newPossition= courseOwner.chapters.length;
 
         const newChapter= await Chapter.create({
             title,
