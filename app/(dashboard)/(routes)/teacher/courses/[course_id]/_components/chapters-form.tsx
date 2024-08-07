@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { ChapterList } from "./chapter-list";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -65,6 +66,21 @@ export const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
 
   const { isSubmitting, isValid } = form.formState;
   const router= useRouter();
+
+  const onReorder = async (updateData:{_id: string, position:number}[])=>{
+      try {
+        setIsUpdating(true);
+        await axios.put(`/api/update_course/${courseId}/reorder`,{
+          list:updateData
+        });
+        toast.success("Chapters reordered!")
+        router.refresh();
+      } catch (error) {
+        toast.error("Something went wrong");
+      }finally{
+        setIsUpdating(false);
+      }
+  }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values)
@@ -143,11 +159,9 @@ export const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
             initialData && !initialData?.chapters?.length && "text-slate-500 italic"
           )}>
             {!initialData?.chapters?.length && "No Chapters" }
-            {initialData.chapters?.length && (
-              chapters?.map((chapter:ChapterProps)=>(
-                <div key={chapter._id}  className="flex items-center p-2 w-full bg-sky-100 border-sky-200 border text-sky-700 rounded-md">{chapter?.title}</div>
-              ))
-            )}
+            {initialData.chapters?.length && 
+              <ChapterList onEdit={()=>{}} onReorder={onReorder} items={chapters || []}/>
+            }
           </div>
         )
       }

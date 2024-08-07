@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET(req:Request, {params}:{params:{courseId:string}}) {
     console.log(params.courseId);
     try {
-        const allChapters= await Chapter.find({courseId:params.courseId});
+        const allChapters= await Chapter.find({courseId:params.courseId}).sort({position:1});
 
         if(!allChapters){
             return new NextResponse("Not found Data", {status:400});
