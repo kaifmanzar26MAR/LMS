@@ -82,6 +82,10 @@ export const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
       }
   }
 
+  const onEdit= (_id:string)=>{
+    router.push(`/teacher/courses/${courseId}/chapters/${_id}`)
+  }
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values)
     try {
@@ -167,7 +171,7 @@ export const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
           )}>
             {!initialData?.chapters?.length && "No Chapters" }
             {initialData.chapters?.length && 
-              <ChapterList onEdit={()=>{}} onReorder={onReorder} items={chapters || []}/>
+              <ChapterList onEdit={onEdit} onReorder={onReorder} items={chapters || []}/>
             }
           </div>
         )
