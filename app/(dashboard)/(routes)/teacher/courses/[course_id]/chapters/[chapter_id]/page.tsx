@@ -2,12 +2,14 @@
 
 import { IconBadge } from "@/components/icon-badge";
 import axios from "axios";
-import { ArrowLeft, LayoutDashboard } from "lucide-react";
+import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChapterTitleForm } from "./_components/chapter-title-form";
 import { ChapterDescriptionForm } from "./_components/chapter-description-form";
+import { ChapterAccessForm } from "./_components/chpater-access-settings";
+import { ChapterVideoForm } from "./_components/chapter-vidoe-form";
 
 interface ChapterProps{
     _id:string,
@@ -99,7 +101,31 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
                             courseId={params.course_id}
                         />
                     </div>
+                    <div>
+                        <div className="flex items-center gap-x-2">
+                            <IconBadge icon={Eye}/>
+                            <h2 className="text-xl">
+                                Access Settings
+                            </h2>
+                        </div>
+                    </div>
+                    <ChapterAccessForm
+                        initialData={chapterData}
+                        courseId={params.course_id}
+                        chapterId={params.chapter_id}
+                    />
                 </div>
+                <div className="flex items-center gap-x-2">
+                    <IconBadge icon={Video}/>
+                    <h2 className="text-xl">
+                        Add a video
+                    </h2>
+                </div>
+                <ChapterVideoForm
+                    initialData={chapterData}
+                    courseId={params.course_id}
+                    chapterId={params.chapter_id}
+                />
 
             </div>
         </div>
