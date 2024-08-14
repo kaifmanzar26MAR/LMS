@@ -10,6 +10,8 @@ import { ChapterTitleForm } from "./_components/chapter-title-form";
 import { ChapterDescriptionForm } from "./_components/chapter-description-form";
 import { ChapterAccessForm } from "./_components/chpater-access-settings";
 import { ChapterVideoForm } from "./_components/chapter-vidoe-form";
+import { Banner } from "@/components/banner";
+import { ChapterActions } from "./_components/cahpter-action";
 
 interface ChapterProps{
     _id:string,
@@ -61,7 +63,17 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
 
 
 
+    const isComplete= requiredFields.every(Boolean);
     return(
+        <>
+        
+            {
+            !chapterData.isPublished && (
+                <Banner
+                variant="warning"
+                label="This chapter is unpublished. It will not be vvisible in the course"/>
+            )
+            }
         <div className="p-6">
             <div className="flex items-center justify-between">
                 <div className="w-full">
@@ -78,6 +90,12 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
                                 Complete all fields {complettionText}
                             </span>
                         </div>
+                        <ChapterActions
+                            disabled={!isComplete}
+                            courseId={params.course_id}
+                            chapterId={params.chapter_id}
+                            isPublished={chapterData.isPublished}
+                        />
                     </div>
                 </div>
             </div>
@@ -99,7 +117,7 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
                             initialData={chapterData}
                             chapterId={chapterData._id}
                             courseId={params.course_id}
-                        />
+                            />
                     </div>
                     <div>
                         <div className="flex items-center gap-x-2">
@@ -113,7 +131,7 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
                         initialData={chapterData}
                         courseId={params.course_id}
                         chapterId={params.chapter_id}
-                    />
+                        />
                 </div>
                 <div className="flex items-center gap-x-2">
                     <IconBadge icon={Video}/>
@@ -125,10 +143,11 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
                     initialData={chapterData}
                     courseId={params.course_id}
                     chapterId={params.chapter_id}
-                />
+                    />
 
             </div>
         </div>
+        </>
     )
 }
 

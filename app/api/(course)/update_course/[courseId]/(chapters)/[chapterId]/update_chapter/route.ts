@@ -20,15 +20,34 @@ export async function POST(req:Request, {params}: {params:{courseId: string, cha
         if(!chapter){
             return new NextResponse("No chpater found!!", {status:400});
         }
-    
+        console.log("chapter", chapter)
         const updatedchapter=await Chapter.findOneAndUpdate({_id:params.chapterId, courseId:params.courseId},{...values});
-
+        console.log("updated chapter", updatedchapter);
         if(values.videoUrl){
             const existingMuxData= await MuxData.findOne({chapterId:params.chapterId});
+            console.log( "existing ", existingMuxData);
             if(existingMuxData){
-                await mux.video.assets.delete(existingMuxData.assetId);
-                await MuxData.findOneAndDelete({_id:existingMuxData._id})
+                console.log("in")
+                try {
+                    // Check if the asset exists
+                    const asset = await mux.video.assets.retrieve(existingMuxData.assetId);
+            
+                    if (asset) {
+                        // If the asset exists, delete it
+                        const delInstance = await mux.video.assets.delete(existingMuxData.assetId);
+                        console.log("Deleted mux.video asset:", delInstance);
+            
+                        // Delete the document from MuxData collection
+                        const delMuxData = await MuxData.findOneAndDelete({ _id: existingMuxData._id });
+                        console.log("Deleted muxdata document:", delMuxData);
+                    } else {
+                        console.error("Mux asset not found.");
+                    }
+                } catch (error) {
+                    console.error("Error deleting Mux video or MuxData document:", error);
+                }
             }
+            console.log("...creating")
             const asset=await mux.video.assets.create({
                 input:values.videoUrl,
                 playback_policy: "public",
@@ -37,7 +56,7 @@ export async function POST(req:Request, {params}: {params:{courseId: string, cha
             if(!asset){
                 return new NextResponse("Somethig went worng in asset creation!!", {status:400});
             }
-            console.log(asset)
+            console.log("assest",asset)
             const newMux=await MuxData.create({
                 chapterId:params.chapterId,
                 assetId:asset.id,
