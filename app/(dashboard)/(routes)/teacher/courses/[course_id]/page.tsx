@@ -139,6 +139,7 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
           disabled={!isComplete}
           courseId={params.course_id}
           isPublished={courseData.isPublished}
+          load={fetchCourseData}
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
