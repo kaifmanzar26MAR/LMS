@@ -71,7 +71,7 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
             !chapterData.isPublished && (
                 <Banner
                 variant="warning"
-                label="This chapter is unpublished. It will not be vvisible in the course"/>
+                label="This chapter is unpublished. It will not be visible in the course."/>
             )
             }
         <div className="p-6">

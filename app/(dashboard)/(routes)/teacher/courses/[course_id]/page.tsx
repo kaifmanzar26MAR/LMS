@@ -13,6 +13,8 @@ import { CategoryForm } from "./_components/category-form";
 import { PriceForm } from "./_components/price-form";
 import { Attachment } from "./_components/attachment-form";
 import { ChapterForm } from "./_components/chapters-form";
+import { Banner } from "@/components/banner";
+import { CourseAction } from "./_components/course-action";
 
 interface AttachmentProps{
   _id: string;
@@ -40,6 +42,7 @@ interface CourseDataProps {
   imageUrl: string;
   price: number;
   categoryId: string;
+  isPublished:boolean;
   attachments: AttachmentProps[];
   chapters?:ChapterProps[];
   createdAt:Date;
@@ -113,8 +116,17 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
   const completedFields = requiredFields.filter(Boolean).length;
 
   const completionText = `(${completedFields}/${totalFields})`;
+  const isComplete= completedFields===totalFields
 
   return (
+    <>
+    {
+      !courseData.isPublished && (
+        <Banner
+        variant="warning"
+        label="This chapter is unpublished. It will not be visible to the students."/>
+      )
+    }
     <div className="p-6">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-y-2">
@@ -123,6 +135,11 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
             Complete all fields {completionText}
           </span>
         </div>
+        <CourseAction
+          disabled={!isComplete}
+          courseId={params.course_id}
+          isPublished={courseData.isPublished}
+        />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
         <div>
@@ -185,6 +202,7 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
