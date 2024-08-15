@@ -151,14 +151,17 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
           <TitleForm
             initialData={courseData}
             courseId={courseData._id}
+            load={fetchCourseData}
           />
           <DescriptionForm
             initialData={courseData}
             courseId={courseData._id}
+            load={fetchCourseData}
           />
           <ImageForm
             initialData={courseData}
             courseId={courseData._id}
+            load={fetchCourseData}
           />
           <CategoryForm
             initialData={courseData}
@@ -167,6 +170,7 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
               label:category.name,
               value: category._id
             }))}
+            load={fetchCourseData}
           />
         </div>
         <div className="space-y-6">
@@ -178,6 +182,7 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
             <ChapterForm
             initialData={courseData}
             courseId={courseData._id}
+            load={fetchCourseData}
           />
           </div>
           <div>
@@ -188,6 +193,7 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
             <PriceForm
             initialData={courseData}
             courseId={courseData._id}
+            load={fetchCourseData}
             />
           </div>
           <div>
@@ -198,6 +204,7 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
             <Attachment
               initialData={courseData}
               courseId={courseData._id}
+              load={fetchCourseData}
             />
           </div>
         </div>

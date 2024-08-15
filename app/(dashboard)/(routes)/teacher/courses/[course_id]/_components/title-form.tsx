@@ -36,8 +36,9 @@ interface CourseData {
 interface TitleFormProps {
   initialData: CourseData;
   courseId: string;
+  load:()=>void;
 }
-export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
+export const TitleForm = ({ initialData, courseId, load }: TitleFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,7 +52,8 @@ export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
     try {
       await axios.patch(`/api/update_course/${courseId}`, values);
       toast.success("Course updated");
-      window.location.reload();
+      // window.location.reload();
+      load();
     } catch (error) {
       toast.error("Something went wrong")
     }

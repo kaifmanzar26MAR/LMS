@@ -35,15 +35,17 @@ interface ChapterVideoFormProps {
   initialData: ChapterData
   courseId: string;
   chapterId:string;
+  load:()=>void;
 }
-export const ChapterVideoForm = ({ initialData, courseId, chapterId }: ChapterVideoFormProps) => {
+export const ChapterVideoForm = ({ initialData, courseId, chapterId, load }: ChapterVideoFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [muxData, setMuxData]=useState<MuxDataProps | null>(null);
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.post(`/api/update_course/${courseId}/${chapterId}/update_chapter`, values);
       toast.success("Chapter updated");
-      window.location.reload();
+      load();
+      fetchMuxData();
     } catch (error) {
       toast.error("Something went wrong")
     }

@@ -53,8 +53,9 @@ interface CourseDataProps {
 interface ChapterFormProps {
   initialData: CourseDataProps;
   courseId: string;
+  load:()=>void;
 }
-export const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
+export const ChapterForm = ({ initialData, courseId, load }: ChapterFormProps) => {
   const [isCreating, setIsCreating]=useState(false);
   const [isUpdating, setIsUpdating]=useState(false);
   const [chapters, setChapters]= useState<ChapterProps[] | []>([]);
@@ -74,7 +75,9 @@ export const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
           list:updateData
         });
         toast.success("Chapters reordered!")
-        router.refresh();
+        // router.refresh();
+        load();
+        fetchChapters()
       } catch (error) {
         toast.error("Something went wrong");
       }finally{
@@ -91,7 +94,8 @@ export const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
     try {
       await axios.post(`/api/update_course/${courseId}/add_chapter`, values);
       toast.success("chapter created");
-      window.location.reload();
+      load();
+      fetchChapters()
     } catch (error) {
       toast.error("Something went wrong")
     }

@@ -27,8 +27,9 @@ interface CourseData {
 interface ImageFormProps {
   initialData: CourseData;
   courseId: string;
+  load:()=>void;
 }
-export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
+export const ImageForm = ({ initialData, courseId,load }: ImageFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
  
 
@@ -36,7 +37,8 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
     try {
       await axios.patch(`/api/update_course/${courseId}`, values);
       toast.success("Course updated");
-      window.location.reload();
+      // window.location.reload()
+      load();
     } catch (error) {
       toast.error("Something went wrong")
     }

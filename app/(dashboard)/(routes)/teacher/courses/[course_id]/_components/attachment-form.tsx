@@ -37,9 +37,10 @@ interface CourseDataProps {
 interface AttachmentFormProps {
   initialData: CourseDataProps;
   courseId: string;
+  load:()=>void;
 }
 
-export const Attachment = ({ initialData, courseId }: AttachmentFormProps) => {
+export const Attachment = ({ initialData, courseId, load}: AttachmentFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [deletingId, setDeletingId]=useState<String | null>(null);
  
@@ -48,7 +49,8 @@ export const Attachment = ({ initialData, courseId }: AttachmentFormProps) => {
     try {
       await axios.post(`/api/update_course/${courseId}/add_attachment`, values);
       toast.success("Course updated");
-      window.location.reload();
+      load();
+      fetchAttachments()
     } catch (error) {
       toast.error("Something went wrong")
     }
@@ -75,7 +77,8 @@ export const Attachment = ({ initialData, courseId }: AttachmentFormProps) => {
       setDeletingId(id);
       await axios.delete(`/api/update_course/${courseId}/delete_attachment/${id}`);
       toast.success("Attachment deleted");
-      window.location.reload();
+      load();
+      fetchAttachments();
     } catch (error) {
       toast.error("Something went wrong in deletion");
     }finally{

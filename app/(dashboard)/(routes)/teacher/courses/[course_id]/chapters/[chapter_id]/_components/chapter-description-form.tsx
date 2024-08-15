@@ -43,8 +43,9 @@ interface ChapterDescriptionFormProps {
   initialData: CourseData;
   courseId: string;
   chapterId: string;
+  load:()=>void;
 }
-export const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: ChapterDescriptionFormProps) => {
+export const ChapterDescriptionForm = ({ initialData, courseId, chapterId, load }: ChapterDescriptionFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,7 +60,7 @@ export const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: Cha
       
       await axios.post(`/api/update_course/${courseId}/${chapterId}/update_chapter`, values);
       toast.success("Course updated");
-      window.location.reload();
+      load();
     } catch (error) {
       toast.error("Something went wrong")
     }

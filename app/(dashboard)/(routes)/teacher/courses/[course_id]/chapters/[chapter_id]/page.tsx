@@ -95,6 +95,7 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
                             courseId={params.course_id}
                             chapterId={params.chapter_id}
                             isPublished={chapterData.isPublished}
+                            load={fetchChapterData}
                         />
                     </div>
                 </div>
@@ -112,11 +113,13 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
                         initialData={chapterData}
                         chapterId={chapterData._id}
                         courseId={params.course_id}
+                        load={fetchChapterData}
                         />
                         <ChapterDescriptionForm
                             initialData={chapterData}
                             chapterId={chapterData._id}
                             courseId={params.course_id}
+                            load={fetchChapterData}
                             />
                     </div>
                     <div>
@@ -131,19 +134,25 @@ const ChapterDetails=({params}:{params:{chapter_id:string, course_id:string}})=>
                         initialData={chapterData}
                         courseId={params.course_id}
                         chapterId={params.chapter_id}
+                        load={fetchChapterData}
                         />
                 </div>
-                <div className="flex items-center gap-x-2">
-                    <IconBadge icon={Video}/>
-                    <h2 className="text-xl">
-                        Add a video
-                    </h2>
-                </div>
-                <ChapterVideoForm
+                <div >
+                    <div className="flex items-center gap-x-2">
+                        <IconBadge icon={Video}/>
+                        <h2 className="text-xl">
+                            Add a video
+                        </h2>
+                    </div>
+                    
+                    <ChapterVideoForm
                     initialData={chapterData}
                     courseId={params.course_id}
                     chapterId={params.chapter_id}
+                    load={fetchChapterData}
                     />
+                </div>
+                
 
             </div>
         </div>

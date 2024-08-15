@@ -40,8 +40,9 @@ interface CategoryFormProps {
   initialData: CourseData;
   courseId: string;
   options:{label:string, value:string}[];
+  load:()=>void;
 }
-export const CategoryForm = ({ initialData, courseId, options }: CategoryFormProps) => {
+export const CategoryForm = ({ initialData, courseId, options,load }: CategoryFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,7 +59,8 @@ export const CategoryForm = ({ initialData, courseId, options }: CategoryFormPro
     try {
       await axios.patch(`/api/update_course/${courseId}`, values);
       toast.success("Course updated");
-      window.location.reload();
+      // window.location.reload();
+      load();
     } catch (error) {
       toast.error("Something went wrong")
     }

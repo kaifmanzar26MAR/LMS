@@ -13,8 +13,9 @@ interface ChapterActionsProps{
     courseId:string;
     chapterId:string;
     isPublished:boolean;
+    load:()=>void;
 }
-export const ChapterActions=({disabled, courseId, chapterId, isPublished}:ChapterActionsProps)=>{
+export const ChapterActions=({disabled, courseId, chapterId, isPublished, load}:ChapterActionsProps)=>{
     
     const [isLoading, setIsLoading]=useState(false);
     const router= useRouter();
@@ -38,7 +39,7 @@ export const ChapterActions=({disabled, courseId, chapterId, isPublished}:Chapte
             // console.log("published")
             await axios.post(`/api/update_course/${courseId}/${chapterId}/update_chapter`, {isPublished: !isPublished })
             toast.success(!isPublished ? "Chapter Published" : "Chpater UnPublished")
-            window.location.reload();
+            load();
 
         } catch (error) {
             toast.error("Something went wrong!!")
