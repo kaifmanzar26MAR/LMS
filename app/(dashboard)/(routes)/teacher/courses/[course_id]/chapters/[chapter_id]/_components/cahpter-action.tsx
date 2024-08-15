@@ -4,6 +4,7 @@ import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -16,13 +17,15 @@ interface ChapterActionsProps{
 export const ChapterActions=({disabled, courseId, chapterId, isPublished}:ChapterActionsProps)=>{
     
     const [isLoading, setIsLoading]=useState(false);
+    const router= useRouter();
 
     const onDelete= async()=>{
         try {
             setIsLoading(true);
-            console.log("deleted")
-            // await axios.delete(`/api/courses/${courseId}/${chapterId}/delte_chapter`);
+            // console.log("deleted")
+            await axios.delete(`/api/update_course/${courseId}/${chapterId}/delete_chapter`);
             toast.success("Chapter Deleted");
+            router.push(`/teacher/courses/${courseId}`)
         } catch (error) {
             toast.error("Something went worng!!");
         }finally{
@@ -32,12 +35,16 @@ export const ChapterActions=({disabled, courseId, chapterId, isPublished}:Chapte
     const onPublish=async()=>{
         try {
             setIsLoading(true);
-            console.log("published")
-            toast.success("Chapter Published")
-            // await axios.post(`/api/course/${courseId}/${chapterId}/update_course`, {isPublished:true})
+            // console.log("published")
+            await axios.post(`/api/update_course/${courseId}/${chapterId}/update_chapter`, {isPublished: !isPublished })
+            toast.success(!isPublished ? "Chapter Published" : "Chpater UnPublished")
+            window.location.reload();
+
         } catch (error) {
             toast.error("Something went wrong!!")
             
+        }finally{
+            setIsLoading(false)
         }
     }
     return (
@@ -51,7 +58,6 @@ export const ChapterActions=({disabled, courseId, chapterId, isPublished}:Chapte
                     {isPublished ? "Unpublish" : "Publish"}
                 </Button>
                 </ConfirmModal>
-            
             <ConfirmModal onConfirm={onDelete}>
                 <Button>
                     <Trash className="h-4 w-4"/>

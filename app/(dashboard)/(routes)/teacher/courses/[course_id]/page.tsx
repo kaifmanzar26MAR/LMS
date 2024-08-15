@@ -106,8 +106,7 @@ const CourseIdPage = ({ params }: { params: { course_id: string } }) => {
     courseData.description,
     courseData.imageUrl,
     courseData.price,
-    courseData.categoryId,
-    courseData?.chapters?.some(chapter=>chapter.isPublished),
+    courseData.categoryId
   ];
 
   const totalFields = requiredFields.length;
