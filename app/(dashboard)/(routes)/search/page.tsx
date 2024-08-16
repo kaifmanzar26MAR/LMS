@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Categories } from "./_components/categories";
+import { SearchInput } from "@/components/search-input";
 
 const Search=()=> {
     const [allCategories, setALlCategories]=useState([])
@@ -25,9 +26,16 @@ const Search=()=> {
         fetchAllCategories();
     },[])
     return ( 
+      <>
+        {
+          <div className="px-6 pt-6 md:hidden md:mb-0 block">
+            <SearchInput/>
+          </div>
+        }
         <div className="p-6">
             <Categories items={allCategories}/>
         </div>
+      </>
      );
 }
 

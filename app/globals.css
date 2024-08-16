@@ -3,7 +3,8 @@
 @tailwind utilities;
 /* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
-  width: 2px;  /* Width of the scrollbar */
+  width: 5px;  /* Width of the scrollbar */
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -15,6 +16,7 @@
   background-color: #cbcaca;  /* Color of the scrollbar thumb */
   border-radius: 10px;  /* Rounded corners for the scrollbar thumb */
   border: 2px solid #ccc;  /* Optional: Border around the thumb */
+  cursor: pointer;
 }
 
 ::-webkit-scrollbar-thumb:hover {
