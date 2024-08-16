@@ -5,8 +5,12 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Categories } from "./_components/categories";
 import { SearchInput } from "@/components/search-input";
-
-const Search=()=> {
+type SearchProps={
+  title:string;
+  categoryId:string;
+}
+const Search=({searchParams}:SearchProps)=> {
+    const abort= new AbortController();
     const [allCategories, setALlCategories]=useState([])
     const fetchAllCategories=async()=>{
         try {
@@ -22,9 +26,36 @@ const Search=()=> {
           toast.error(`Error: ${"An error in fetching categories"}`);
         }
       }
-    useEffect(()=>{
+      const fetchAction= async()=>{
+        try {
+         
+            const response = await axios.post(
+              '/api/action',
+              {
+                title: searchParams.title,
+                categoryId: searchParams.categoryId,
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+            console.log("resp",response.data)
+        } catch (error) {
+          
+        }
+      }
+      useEffect(()=>{
         fetchAllCategories();
-    },[])
+      },[])
+    useEffect(()=>{
+        console.log(searchParams)
+        
+        fetchAction();
+        return ()=>{return abort.abort()}
+        
+    },[searchParams])
     return ( 
       <>
         {

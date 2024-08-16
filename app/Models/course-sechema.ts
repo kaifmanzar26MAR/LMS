@@ -5,6 +5,9 @@ const courseSchema = new Schema({
     title: {
         type: String,
         required: true,
+        index:true,
+        trim:true,
+        unique:true
     },
     userId: {
         type: String,
