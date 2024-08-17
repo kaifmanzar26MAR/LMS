@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { MuxData } from "./muxdata-schema";
 import { UserProgress } from "./userprogress-schema";
 
-const chapterSchema= new Schema({
+const chapterSchema= new mongoose.Schema({
     title:{
         type:String,
         required:true,

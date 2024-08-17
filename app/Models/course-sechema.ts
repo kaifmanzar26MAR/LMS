@@ -1,54 +1,55 @@
 import mongoose, { Schema } from "mongoose";
 import { Attachment } from "./attachment-schema";
 
-const courseSchema = new Schema({
+const courseSchema = new Schema(
+  {
     title: {
-        type: String,
-        required: true,
-        index:true,
-        trim:true,
-        unique:true
+      type: String,
+      required: true,
+      index: true,
+      trim: true,
+      unique: true,
     },
     userId: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
+      type: String,
     },
     imageUrl: {
-        type: String,
+      type: String,
     },
     price: {
-        type: Number, 
+      type: Number,
     },
     isPublished: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
-    categoryId:{
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    attachments: [
+      {
         type: Schema.Types.ObjectId,
-        ref:"Category"
-    },
-    attachments:[{
-        type:Schema.Types.ObjectId,
-        ref:"Attachment"
-    }],
-    chapters:[
-        {
-            type:Schema.Types.ObjectId,
-            ref:"Chapter"
-        }
+        ref: "Attachment",
+      },
     ],
-    pruchases:[
-        {
-            type:Schema.Types.ObjectId,
-            ref:"Purchase"
-        }
-    ]
-},{
+    chapters: [{ type: mongoose.Schema.Types.ObjectId, ref: "Chapter" }],
+    pruchases: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Purchase",
+      },
+    ],
+  },
+  {
     timestamps: true,
-});
+  }
+);
 
 // Check if the model already exists to avoid recompilation issues
-export const Course = mongoose.models.Course || mongoose.model('Course', courseSchema);
+export const Course =
+  mongoose.models.Course || mongoose.model("Course", courseSchema);

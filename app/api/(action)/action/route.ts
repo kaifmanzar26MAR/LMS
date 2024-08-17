@@ -1,4 +1,3 @@
-
 import { Chapter } from "@/app/Models/chapter-schmea";
 import { Course } from "@/app/Models/course-sechema";
 import { Purchase } from "@/app/Models/purchase-schema";
@@ -99,27 +98,30 @@ import { NextResponse } from "next/server";
 //   }
 // }
 
-
-export async function POST(req:Request) {
+export async function POST(req: Request) {
   try {
-    const {userId}= auth();
-    const {title, categoryId}=await req.json();
-    console.log(title, categoryId, req.json)
+    const { userId } = auth();
+    const { title, categoryId } = await req.json();
+    console.log(title, categoryId, req.json);
 
     const matchedCourse = await Course.find({
       userId,
+      isPublished: true,
       title: {
         $regex: title || "", // Use $regex to perform a "contains" search
         $options: "i", // Makes the search case-insensitive
       },
-      ...(categoryId && { categoryId }) // Only include categoryId if it's defined
-    });
-  console.log(matchedCourse);
-  if(!matchedCourse) return new NextResponse("Something went worng!!!", {status:500})
+      ...(categoryId && { categoryId }), // Only include categoryId if it's defined
+    })
+    .populate('categoryId', 'name _id')   
+    
+    console.log(matchedCourse);
+    if (!matchedCourse)
+      return new NextResponse("Something went worng!!!", { status: 500 });
 
-    return NextResponse.json(matchedCourse)
+    return NextResponse.json(matchedCourse);
   } catch (error) {
     console.log(error);
-    return new NextResponse("COURSE ERROR" + error, {status:500})
+    return new NextResponse("COURSE ERROR" + error, { status: 500 });
   }
 }
