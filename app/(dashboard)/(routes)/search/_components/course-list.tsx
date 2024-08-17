@@ -2,15 +2,6 @@
 
 import CourseCard from "@/app/(dashboard)/(routes)/search/_components/course-card";
 
-interface AttachmentProps {
-  _id: string;
-  name: string;
-  courseId: string;
-  url: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 
 interface CourseDataProps {
   _id: string;
@@ -20,7 +11,7 @@ interface CourseDataProps {
   price: number;
   categoryId: { _id:string, name:string};
   isPublished: boolean;
-  attachments: AttachmentProps[];
+  attachments?: string[];
   chapters?: string[];
   createdAt: Date;
   updatedAt: Date;
