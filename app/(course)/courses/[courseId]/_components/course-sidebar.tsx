@@ -1,3 +1,4 @@
+import CourseSidebarItems from "./course-sidebar-items";
 
 interface CourseDataProps {
     _id: string;
@@ -27,11 +28,42 @@ interface CourseDataProps {
 interface CourseSidebarProps{
     course:CourseDataProps | null;
     chapters:ChapterProps[] | [];
-    progress:number;
+    progresses:{
+      isCompleted:boolean;
+      _id:string;
+    }[];
+    isPurchased:boolean;
 }
-const CourseSidebar = ({course, chapters, progress}:CourseSidebarProps) => {
+const CourseSidebar = ({course, chapters, progresses, isPurchased}:CourseSidebarProps) => {
+  if(!course){
+    return <></>
+  }
   return (
-    <div>{course?.title} {chapters[0].title} {progress}</div>
+    <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
+      <div className="p-8 flex flex-col border-b">
+      <h1 className="font-semibold">
+        {course?.title}
+      </h1>
+      {/* Check purchase and add progress */}
+      </div>
+      <div className="flex flex-col w-full">
+        {chapters?.map((chapter:ChapterProps)=>{
+          const isCompleted= progresses.find((progress)=> progress.isCompleted===true)
+          console.log("iscomp", isCompleted, progresses)
+          return(
+            <CourseSidebarItems
+              key={chapter._id}
+              _id={chapter._id}
+              label={chapter.title}
+              isCompleted={!!isCompleted}
+              isLocked={!chapter.isFree && !isPurchased}
+              courseId={course?._id} 
+            />
+          )
+        })
+        }
+      </div>
+    </div>
   )
 }
 

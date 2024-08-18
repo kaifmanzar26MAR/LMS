@@ -35,9 +35,9 @@ const CourseLayout = ({
   params: { courseId: string };
 }) => {
     const [course, setCourse]=useState<CourseDataProps | null>(null);
-    const [progress, setProgress]=useState(0);
+    const [progresses, setProgresses]=useState([]);
     const [chapters, setChapters]=useState<ChapterProps[] | []>([]);
-
+    const [isPurchased, setIsPurchased]=useState(false);
 
     const fetchCourseData=async ()=>{
         try {
@@ -47,6 +47,13 @@ const CourseLayout = ({
                 ids: courseResponse.data?.chapters,
               });
             setChapters(chapterResponse.data);
+            const chapterProgress = await axios.post("/api/get_purchase_and_progress", {
+                courseId: courseResponse.data?._id,
+                chapters:courseResponse.data?.courses
+              });
+              console.log("progresses", chapterProgress.data)
+            setProgresses(chapterProgress.data?.progresses || []);
+            setIsPurchased(chapterProgress.data?.isPurchase || false)
         } catch (error) {
             console.log(error);
         }
@@ -59,7 +66,7 @@ const CourseLayout = ({
   return (
     <div className="h-full">
       <div className="hidden md:flex h-full w-80 flex-col fixed inset-y-0 z-50">
-        <CourseSidebar course={course}  chapters={chapters} progress={progress}/>
+        <CourseSidebar course={course}  chapters={chapters} progresses={progresses} isPurchased={isPurchased}/>
       </div>
       <main className="md:pl-80 h-full">{children}</main>
     </div>
