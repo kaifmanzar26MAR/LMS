@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(req:Request) {
     try {
-        const {courseId, _id}= await req.json();
-        const muxdata= await MuxData.find({courseId,_id });
+        const {chapterId, _id}= await req.json();
+        const muxdata= await MuxData.find({chapterId,_id });
         if(!muxdata){
             return new NextResponse("No Mux Data found!!", {status:400});
         }

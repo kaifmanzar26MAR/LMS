@@ -34,8 +34,9 @@ export async function POST(req:Request, {params}: {params:{courseId: string, cha
             
                     if (asset) {
                         // If the asset exists, delete it
-                        const delInstance = await mux.video.assets.delete(existingMuxData.assetId);
-                        console.log("Deleted mux.video asset:", delInstance);
+                        
+                        // const delInstance = await mux.video.assets.delete(existingMuxData.assetId);
+                        // console.log("Deleted mux.video asset:", delInstance);
             
                         // Delete the document from MuxData collection
                         const delMuxData = await MuxData.findOneAndDelete({ _id: existingMuxData._id });
