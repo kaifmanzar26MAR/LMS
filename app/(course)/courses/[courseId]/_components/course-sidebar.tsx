@@ -27,12 +27,12 @@ interface CourseDataProps {
   
 interface CourseSidebarProps{
     course:CourseDataProps | null;
-    chapters:ChapterProps[] | [];
+    chapters?:ChapterProps[] | [];
     progresses:{
       isCompleted:boolean;
       _id:string;
     }[];
-    isPurchased:boolean;
+    isPurchased?:boolean;
 }
 const CourseSidebar = ({course, chapters, progresses, isPurchased}:CourseSidebarProps) => {
   if(!course){

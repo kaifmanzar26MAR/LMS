@@ -12,7 +12,7 @@ export async function POST(req:Request) {
         const validIds = ids.map((id:string )=> new mongoose.Types.ObjectId(id));
     
         // Find chapters with the provided ids
-        const chapters = await Chapter.find({ _id: { $in: validIds }, isPublished:true });
+        const chapters = await Chapter.find({ _id: { $in: validIds }, isPublished:true }).sort({position:1});
         return NextResponse.json(chapters);
       } catch (error) {
         console.error(error);

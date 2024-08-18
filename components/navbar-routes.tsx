@@ -11,7 +11,7 @@ function NavbarRoutes() {
   const router = useRouter();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
-  const isPlayerPage = pathname?.includes("/chapter");
+  const isCoursePage = pathname?.includes("/courses");
   const isSearchPage= pathname==="/search";
 
   return (
@@ -24,7 +24,7 @@ function NavbarRoutes() {
       )
     }
     <div className="flex gap-x-2 ml-auto">
-      {isTeacherPage || isPlayerPage ? (
+      {isTeacherPage || isCoursePage ? (
         <Button size="sm" variant="ghost" onClick={()=>router.push('/')}>
           <LogOut className="h-4 w-4 mr-2" />
           Exit
