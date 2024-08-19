@@ -53,21 +53,21 @@ const ChapterIdPage = ({
       );
       console.log(response.data);
       setChapterData(response.data);
+      const courseResponse= await axios.post('/api/get_a_course',{_id:params.courseId})
+      setCoursePrice(courseResponse.data.price);
       const chapterProgress = await axios.post(
         "/api/get_purchase_and_progress",
         {
           courseId: params.courseId,
-          chapterId: params.chapterId,
+          chapters:courseResponse.data?.chapters,
         }
       );
-      console.log(chapterProgress.data);
-      const courseResponse= await axios.post('/api/get_a_course',{_id:params.courseId})
-      setCoursePrice(courseResponse.data.price);
+      console.log("progresss data", chapterProgress.data);
       const muxResponse= await axios.post("/api/getmuxdata", {_id:response.data?.muxdata, chapterId:params.chapterId})
       console.log("mux", muxResponse.data);
       setMuxData(muxResponse.data[0]);
       setIsPurchased(chapterProgress.data.isPurchase);
-      setProgress(chapterProgress.data?.progress || false);
+      setProgress(chapterProgress.data?.progresses[response.data?.position] || false);
       const attachmentResponse= await axios.get(`/api/get_attachments/${params.courseId}`);
       setAttachments(attachmentResponse.data);
     } catch (error) {
@@ -76,14 +76,14 @@ const ChapterIdPage = ({
   };
   useEffect(() => {
     fetchChpaterData();
-  }, []);
+  }, [params.chapterId, params.courseId]);
 
-  if (!chapterData || progress===null) {
+  if (!chapterData) {
     return <>Loading...</>;
   }
 
   const isLocked = !chapterData.isFree && !isPurchased;
-  const completedOnEnd = !!isPurchased && progress?.isCompleted;
+  const completedOnEnd = !!isPurchased && (progress ? progress?.isCompleted : false);
   return (
     <div>
       {progress?.isCompleted && (

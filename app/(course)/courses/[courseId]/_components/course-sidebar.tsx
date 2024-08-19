@@ -32,7 +32,7 @@ interface CourseSidebarProps{
       isCompleted:boolean;
       _id:string;
     }[];
-    isPurchased?:boolean;
+    isPurchased:boolean;
 }
 const CourseSidebar = ({course, chapters, progresses, isPurchased}:CourseSidebarProps) => {
   if(!course){
@@ -58,6 +58,7 @@ const CourseSidebar = ({course, chapters, progresses, isPurchased}:CourseSidebar
               isCompleted={!!isCompleted}
               isLocked={!chapter.isFree && !isPurchased}
               courseId={course?._id} 
+              isPurchased={isPurchased}
             />
           )
         })

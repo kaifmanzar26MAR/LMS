@@ -8,7 +8,8 @@ export async function POST(req:Request) {
     try {
         const {userId}=auth();
         const {courseId, chapters}= await req.json();
-
+       
+        console.log("cahpters and cid", chapters, courseId);
         await dbConnect();
 
         const isPurchase=await Purchase.findOne({userId, courseId});
@@ -21,7 +22,7 @@ export async function POST(req:Request) {
         const progresses= await Promise.all(chapters.map((chapter:any)=>{
                 return UserProgress.findOne({chapterId:chapter._id})
         }))
-console.log(progresses)
+console.log("progesses", progresses)
         return NextResponse.json({isPurchase:true, progresses})
 
         

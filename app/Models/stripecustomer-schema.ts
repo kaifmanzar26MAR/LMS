@@ -15,4 +15,4 @@ const stripeCustomerSchema= new Schema({
 })
 
 
-const StripeCustomer= mongoose.models.StripeCustomer || mongoose.model("StripeCustomer", stripeCustomerSchema);
+export const StripeCustomer= mongoose.models.StripeCustomer || mongoose.model("StripeCustomer", stripeCustomerSchema);

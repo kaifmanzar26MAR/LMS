@@ -11,6 +11,7 @@ interface CourseSidebarItemsProps {
   isCompleted: boolean;
   isLocked: boolean;
   courseId: string;
+  isPurchased:boolean;
 }
 const CourseSidebarItems = ({
   _id,
@@ -18,12 +19,13 @@ const CourseSidebarItems = ({
   courseId,
   isCompleted,
   isLocked,
+  isPurchased
 }: CourseSidebarItemsProps) => {
-  console.log(isCompleted);
+  console.log("is Lock form side items", isLocked);
   const pathname= usePathname();
   const router=  useRouter();
 
-  const Icon= isLocked ? Lock  : (isCompleted ? CheckCircle : PlayCircle)
+  let Icon= (isLocked ? Lock  : (isCompleted ? CheckCircle : PlayCircle))
 
   const isActive= pathname?.includes(_id);
 

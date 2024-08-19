@@ -59,7 +59,7 @@ const CourseLayout = ({
       );
       console.log("progresses", chapterProgress.data);
       setProgresses(chapterProgress.data?.progresses || []);
-      setIsPurchased(chapterProgress.data?.isPurchase || false);
+      setIsPurchased(chapterProgress.data.isPurchase);
     } catch (error) {
       console.log(error);
     }
