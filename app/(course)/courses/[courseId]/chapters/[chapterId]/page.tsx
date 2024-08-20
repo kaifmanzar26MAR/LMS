@@ -19,78 +19,118 @@ interface ChapterProps {
   isFree: boolean;
   courseId: string;
 }
-interface progressProps {
+interface ProgressProps {
   isCompleted: boolean;
   _id: string;
 }
-interface muxdataProps{
-  _id:string;
-  chapterId:string;
-  assetId:string;
-  playbackId:string;
+interface MuxDataProps {
+  _id: string;
+  chapterId: string;
+  assetId: string;
+  playbackId: string;
 }
-interface AttachmentProps{
-  _id:string;
-  url:string;
-  name:string;
+interface AttachmentProps {
+  _id: string;
+  url: string;
+  name: string;
 }
- 
+interface CourseDataProps {
+  _id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+  categoryId: { _id: string; name: string };
+  isPublished: boolean;
+  attachments?: string[];
+  chapters?: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ProgressDataProps {
+  isPurchase: boolean;
+  progresses: {
+    isCompleted: boolean;
+    _id: string;
+  }[];
+}
+
 const ChapterIdPage = ({
   params,
 }: {
   params: { chapterId: string; courseId: string };
 }) => {
   const [chapterData, setChapterData] = useState<ChapterProps | null>(null);
-  const [progress, setProgress] = useState<progressProps | null>(null);
+  const [progress, setProgress] = useState<ProgressProps | null>(null);
   const [isPurchased, setIsPurchased] = useState(false);
-  const [muxdata, setMuxData]=useState<muxdataProps | null>(null);
-  const [coursePrice, setCoursePrice]=useState(0);
-  const [attachments, setAttachments]=useState<AttachmentProps[] | []>([]);
-  const fetchChpaterData = async () => {
+  const [muxData, setMuxData] = useState<MuxDataProps | null>(null);
+  const [attachments, setAttachments] = useState<AttachmentProps[]>([]);
+  const [course, setCourse] = useState<CourseDataProps | null>(null);
+  const [progressData, setProgressData] = useState<ProgressDataProps | null>(null);
+
+  const fetchChapterData = async () => {
     try {
       const response = await axios.get(
         `/api/getchapters/${params.courseId}/get_a_chapter/${params.chapterId}`
       );
-      console.log(response.data);
       setChapterData(response.data);
-      const courseResponse= await axios.post('/api/get_a_course',{_id:params.courseId})
-      setCoursePrice(courseResponse.data.price);
-      const chapterProgress = await axios.post(
-        "/api/get_purchase_and_progress",
-        {
-          courseId: params.courseId,
-          chapters:courseResponse.data?.chapters,
-        }
-      );
-      console.log("progresss data", chapterProgress.data);
-      const muxResponse= await axios.post("/api/getmuxdata", {_id:response.data?.muxdata, chapterId:params.chapterId})
-      console.log("mux", muxResponse.data);
+
+      const courseResponse = await axios.post('/api/get_a_course', { _id: params.courseId });
+      setCourse(courseResponse.data);
+
+      const muxResponse = await axios.post("/api/getmuxdata", {
+        _id: response.data?.muxdata,
+        chapterId: params.chapterId,
+      });
       setMuxData(muxResponse.data[0]);
-      setIsPurchased(chapterProgress.data.isPurchase);
-      setProgress(chapterProgress.data?.progresses[response.data?.position] || false);
-      const attachmentResponse= await axios.get(`/api/get_attachments/${params.courseId}`);
+
+      const attachmentResponse = await axios.get(`/api/get_attachments/${params.courseId}`);
       setAttachments(attachmentResponse.data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const fetchProgressAndPurchase = async () => {
+    try {
+      if (!course || !course._id || !chapterData) {
+        return;
+      }
+
+      const chapterProgress = await axios.post("/api/get_purchase_and_progress", {
+        courseId: course._id,
+        chapters: course.chapters,
+      });
+      setProgressData(chapterProgress.data);
+      setIsPurchased(chapterProgress.data.isPurchase)
+      setProgress(chapterProgress.data?.progresses[chapterData.position]);
+      console.log("prog data", chapterProgress.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    fetchChpaterData();
+    fetchChapterData();
   }, [params.chapterId, params.courseId]);
 
-  if (!chapterData) {
-    return <>Loading...</>;
-  }
+  useEffect(() => {
+    if (course && chapterData) {
+      fetchProgressAndPurchase();
+    }
+  }, [course, chapterData]);
 
-  const isLocked = !chapterData.isFree && !isPurchased;
-  const completedOnEnd = !!isPurchased && (progress ? progress?.isCompleted : false);
+  if (!chapterData) return <>Loading...</>;
+
+  const isLocked = !chapterData.isFree && !progressData?.isPurchase;
+  const completedOnEnd =
+    progressData?.isPurchase && progress ? progress.isCompleted : false;
+
   return (
     <div>
       {progress?.isCompleted && (
-        <Banner
-          variant="success"
-          label="You have already completed this chapter"
-        />
+        <Banner variant="success" label="You have already completed this chapter" />
       )}
       {isLocked && (
         <Banner
@@ -105,8 +145,7 @@ const ChapterIdPage = ({
             chapterId={params.chapterId}
             title={chapterData.title}
             courseId={params.courseId}
-            // nextChapterId={nextChapter?._id}
-            playbackId={muxdata?.playbackId || null}
+            playbackId={muxData?.playbackId || null}
             isLocked={isLocked}
             completedOnEnd={completedOnEnd}
             videoUrl={chapterData.videoUrl}
@@ -114,35 +153,34 @@ const ChapterIdPage = ({
         </div>
         <div className="p-4 flex flex-col md:flex-row items-center justify-between">
           <h2 className="text-2xl font-semibold mb-2">{chapterData.title}</h2>
-          {
-            isPurchased ? (
-              <div>
-                {/* TODO: add coourse progresss button */}
-              </div>
-            ) : (
-              <CourseEnrollButton courseId={params.courseId} price={coursePrice}/>
-            )
-          }
+          {isPurchased ? (
+            <div>
+              {/* TODO: add course progress button */}
+            </div>
+          ) : (
+            <CourseEnrollButton courseId={params.courseId} price={Number(course?.price)} />
+          )}
         </div>
-        <Separator/>
-        <div dangerouslySetInnerHTML={{__html:chapterData.description}} className="p-6 bg-white"/>
-        {
-          !!attachments.length && (
-            <>
-              <Separator/>
-              <div className="p-4">
-                {
-                  attachments.map((attachment)=>(
-                    <a href={attachment.url} target="_blank" key={attachment._id} className="flex items-center p-3 w-full bg-sky-200 border text-sky-700 rounded-md hover:underline">
-                      <File />
-                      <p className="line-clamp-1">{attachment?.name}</p>
-                    </a>
-                  ))
-                }
-              </div>
-            </>
-          )
-        }
+        <Separator />
+        <div dangerouslySetInnerHTML={{ __html: chapterData.description }} className="p-6 bg-white" />
+        {!!attachments.length && (
+          <>
+            <Separator />
+            <div className="p-4">
+              {attachments.map((attachment) => (
+                <a
+                  href={attachment.url}
+                  target="_blank"
+                  key={attachment._id}
+                  className="flex items-center p-3 w-full bg-sky-200 border text-sky-700 rounded-md hover:underline"
+                >
+                  <File />
+                  <p className="line-clamp-1">{attachment.name}</p>
+                </a>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

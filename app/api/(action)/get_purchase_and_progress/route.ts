@@ -15,15 +15,31 @@ export async function POST(req:Request) {
         const isPurchase=await Purchase.findOne({userId, courseId});
 
         if(!isPurchase){
-            return NextResponse.json({isPurchase:false});
+            return NextResponse.json({isPurchase:false, progresses:[]});
         }
-
-
-        const progresses= await Promise.all(chapters.map((chapter:any)=>{
-                return UserProgress.findOne({chapterId:chapter._id})
-        }))
-console.log("progesses", progresses)
-        return NextResponse.json({isPurchase:true, progresses})
+        if(!chapters || chapters.length===0){
+            return NextResponse.json({isPurchase:true, progresses:[] })
+        }
+        const progresses = await Promise.all(
+            chapters.map(async (chapter: any) => {
+              const pro = await UserProgress.findOne({ chapterId: chapter._id });
+          
+              if (!pro) {
+                return {
+                  isCompleted: false,
+                  _id: "null",
+                };
+              }
+          
+              return {
+                isCompleted: pro.isCompleted,
+                _id: pro._id,
+              };
+            })
+          );
+          
+        console.log("progesses", progresses)
+        return NextResponse.json({isPurchase:true, progresses:progresses})
 
         
     } catch (error) {

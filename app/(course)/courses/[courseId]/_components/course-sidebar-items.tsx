@@ -21,10 +21,10 @@ const CourseSidebarItems = ({
   isLocked,
   isPurchased
 }: CourseSidebarItemsProps) => {
-  console.log("is Lock form side items", isLocked);
+  console.log("is complete", isCompleted);
   const pathname= usePathname();
   const router=  useRouter();
-
+  
   let Icon= (isLocked ? Lock  : (isCompleted ? CheckCircle : PlayCircle))
 
   const isActive= pathname?.includes(_id);

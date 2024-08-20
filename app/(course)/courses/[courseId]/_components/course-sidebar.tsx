@@ -1,3 +1,4 @@
+import { CourseProgress } from "@/components/course-progress";
 import CourseSidebarItems from "./course-sidebar-items";
 
 interface CourseDataProps {
@@ -36,26 +37,34 @@ interface CourseSidebarProps{
 }
 const CourseSidebar = ({course, chapters, progresses, isPurchased}:CourseSidebarProps) => {
   if(!course){
-    return <></>
+    return <>Loading...</>
   }
+  console.log("hiii", isPurchased, progresses)
   return (
     <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
       <div className="p-8 flex flex-col border-b">
       <h1 className="font-semibold">
         {course?.title}
       </h1>
-      {/* Check purchase and add progress */}
+      {
+        isPurchased && (
+          <div className="mt-10">
+            <CourseProgress variant="successs" value={progresses.length}/>
+          </div>
+        )
+      }
       </div>
       <div className="flex flex-col w-full">
         {chapters?.map((chapter:ChapterProps)=>{
-          const isCompleted= progresses.find((progress)=> progress.isCompleted===true)
+          const isCompleted= progresses[chapter.position]
           console.log("iscomp", isCompleted, progresses)
+          console.log("purchase", isPurchased)
           return(
             <CourseSidebarItems
               key={chapter._id}
               _id={chapter._id}
               label={chapter.title}
-              isCompleted={!!isCompleted}
+              isCompleted={isCompleted.isCompleted}
               isLocked={!chapter.isFree && !isPurchased}
               courseId={course?._id} 
               isPurchased={isPurchased}
