@@ -8,6 +8,7 @@ import CourseEnrollButton from "./_components/course-enrollment-button";
 import { Separator } from "@/components/ui/separator";
 import { Preview } from "@/components/preview";
 import { File } from "lucide-react";
+import CourseProgressButton from "./_components/course-progress-button";
 
 interface ChapterProps {
   _id: string;
@@ -18,6 +19,7 @@ interface ChapterProps {
   isPublished: boolean;
   isFree: boolean;
   courseId: string;
+  isCompleted:boolean;
 }
 interface ProgressProps {
   isCompleted: boolean;
@@ -62,12 +64,14 @@ const ChapterIdPage = ({
   params: { chapterId: string; courseId: string };
 }) => {
   const [chapterData, setChapterData] = useState<ChapterProps | null>(null);
-  const [progress, setProgress] = useState<ProgressProps | null>(null);
+  const [progress, setProgress] = useState<ProgressProps>({isCompleted:false, _id:""});
   const [isPurchased, setIsPurchased] = useState(false);
   const [muxData, setMuxData] = useState<MuxDataProps | null>(null);
   const [attachments, setAttachments] = useState<AttachmentProps[]>([]);
   const [course, setCourse] = useState<CourseDataProps | null>(null);
-  const [progressData, setProgressData] = useState<ProgressDataProps | null>(null);
+  const [progressData, setProgressData] = useState<ProgressDataProps | null>(
+    null
+  );
 
   const fetchChapterData = async () => {
     try {
@@ -76,7 +80,9 @@ const ChapterIdPage = ({
       );
       setChapterData(response.data);
 
-      const courseResponse = await axios.post('/api/get_a_course', { _id: params.courseId });
+      const courseResponse = await axios.post("/api/get_a_course", {
+        _id: params.courseId,
+      });
       setCourse(courseResponse.data);
 
       const muxResponse = await axios.post("/api/getmuxdata", {
@@ -85,7 +91,9 @@ const ChapterIdPage = ({
       });
       setMuxData(muxResponse.data[0]);
 
-      const attachmentResponse = await axios.get(`/api/get_attachments/${params.courseId}`);
+      const attachmentResponse = await axios.get(
+        `/api/get_attachments/${params.courseId}`
+      );
       setAttachments(attachmentResponse.data);
     } catch (error) {
       console.log(error);
@@ -98,12 +106,15 @@ const ChapterIdPage = ({
         return;
       }
 
-      const chapterProgress = await axios.post("/api/get_purchase_and_progress", {
-        courseId: course._id,
-        chapters: course.chapters,
-      });
+      const chapterProgress = await axios.post(
+        "/api/get_purchase_and_progress",
+        {
+          courseId: course._id,
+          chapters: course.chapters,
+        }
+      );
       setProgressData(chapterProgress.data);
-      setIsPurchased(chapterProgress.data.isPurchase)
+      setIsPurchased(chapterProgress.data.isPurchase);
       setProgress(chapterProgress.data?.progresses[chapterData.position]);
       console.log("prog data", chapterProgress.data);
     } catch (error) {
@@ -130,7 +141,10 @@ const ChapterIdPage = ({
   return (
     <div>
       {progress?.isCompleted && (
-        <Banner variant="success" label="You have already completed this chapter" />
+        <Banner
+          variant="success"
+          label="You have already completed this chapter"
+        />
       )}
       {isLocked && (
         <Banner
@@ -155,14 +169,31 @@ const ChapterIdPage = ({
           <h2 className="text-2xl font-semibold mb-2">{chapterData.title}</h2>
           {isPurchased ? (
             <div>
-              {/* TODO: add course progress button */}
+              <CourseProgressButton
+                chapterId={params.chapterId}
+                courseId={params.courseId}
+                nextChapterId={
+                  course?.chapters
+                    ? course.chapters.length >= chapterData?.position + 1
+                      ? course?.chapters[chapterData.position + 1]
+                      : null
+                    : null
+                }
+                isCompleted={chapterData.isCompleted}
+              />
             </div>
           ) : (
-            <CourseEnrollButton courseId={params.courseId} price={Number(course?.price)} />
+            <CourseEnrollButton
+              courseId={params.courseId}
+              price={Number(course?.price)}
+            />
           )}
         </div>
         <Separator />
-        <div dangerouslySetInnerHTML={{ __html: chapterData.description }} className="p-6 bg-white" />
+        <div
+          dangerouslySetInnerHTML={{ __html: chapterData.description }}
+          className="p-6 bg-white"
+        />
         {!!attachments.length && (
           <>
             <Separator />

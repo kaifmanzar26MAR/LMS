@@ -12,7 +12,7 @@ export async function POST(req:Request, {params}: {params:{courseId: string, cha
     try {
         const {userId}=auth();
         const values= await req.json();
-        
+        console.log("values", values)
         await dbConnect();
     
         const chapter=await Chapter.findOne({_id:params.chapterId, courseId:params.courseId});
@@ -76,7 +76,7 @@ export async function POST(req:Request, {params}: {params:{courseId: string, cha
         if(!updatedchapter){
             return new NextResponse("Something went wrong in updating chapter!!", {status:400})
         }
-        
+        // console.log("updated chapter...", updatedchapter)
         return NextResponse.json(updatedchapter);
     } catch (error) {
         console.log("[CHAPTER] update error "+ error);

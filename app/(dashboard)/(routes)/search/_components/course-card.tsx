@@ -1,3 +1,4 @@
+import { CourseProgress } from "@/components/course-progress";
 import { IconBadge } from "@/components/icon-badge";
 import { formatPrice } from "@/lib/format-price";
 import axios from "axios";
@@ -67,9 +68,7 @@ const CourseCard = ({
         </div>
         {
             progress!==null ? (
-                <div>
-                    Todo: progress
-                </div>
+                <CourseProgress size="sm" value={progress} variant={progress ===100 ? "success" : "default"}/>
             ):(
                 <p className="text-md md:text-sm font-medium text-slate-700">
                     {formatPrice(price)}

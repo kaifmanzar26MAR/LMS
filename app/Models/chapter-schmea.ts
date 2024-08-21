@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { MuxData } from "./muxdata-schema";
 import { UserProgress } from "./userprogress-schema";
+import { boolean } from "zod";
 
 const chapterSchema= new mongoose.Schema({
     title:{
@@ -40,6 +41,10 @@ const chapterSchema= new mongoose.Schema({
         type:Schema.Types.ObjectId,
         ref:"UserProgress"
     }],
+    isCompleted:{
+        type:Boolean,
+        default:false,
+    }
 },
 {
     timestamps:true

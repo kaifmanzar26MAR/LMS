@@ -27,6 +27,7 @@ interface ChapterProps {
   isPublished: boolean;
   isFree: boolean;
   courseId: string;
+  isCompleted:boolean;
 }
 interface ProgressDataProps {
   isPurchase: boolean;

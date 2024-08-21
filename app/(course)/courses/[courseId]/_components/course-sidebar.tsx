@@ -24,6 +24,7 @@ interface CourseDataProps {
     isPublished: boolean;
     isFree: boolean;
     courseId:string;
+    isCompleted?:boolean;
   }
   
 interface CourseSidebarProps{
@@ -49,7 +50,7 @@ const CourseSidebar = ({course, chapters, progresses, isPurchased}:CourseSidebar
       {
         isPurchased && (
           <div className="mt-10">
-            <CourseProgress variant="successs" value={progresses.length}/>
+            <CourseProgress variant="success" value={progresses.length}/>
           </div>
         )
       }
@@ -64,7 +65,7 @@ const CourseSidebar = ({course, chapters, progresses, isPurchased}:CourseSidebar
               key={chapter._id}
               _id={chapter._id}
               label={chapter.title}
-              isCompleted={isCompleted.isCompleted}
+              isCompleted={chapter.isCompleted ? chapter.isCompleted : false}
               isLocked={!chapter.isFree && !isPurchased}
               courseId={course?._id} 
               isPurchased={isPurchased}
