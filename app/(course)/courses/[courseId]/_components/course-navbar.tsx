@@ -35,12 +35,13 @@ interface CourseDataProps {
       _id:string;
     }[];
     isPurchased:boolean;
+    progressPercent:number;
 
   }
-const CourseNavbar = ({course, progresses,chapters, isPurchased }: CourseNavbarProps) => {
+const CourseNavbar = ({course, progresses,chapters, isPurchased, progressPercent }: CourseNavbarProps) => {
   return (
     <div className='p-4 border-b h-full flex items-center bg-white shadow-sm'>
-        <CourseMobileSidebar course={course} progresses={progresses} chapters={chapters} isPurchased={isPurchased} />
+        <CourseMobileSidebar course={course} progresses={progresses} chapters={chapters} isPurchased={isPurchased} progressPercent={progressPercent} />
         <NavbarRoutes/>
     </div>
   )

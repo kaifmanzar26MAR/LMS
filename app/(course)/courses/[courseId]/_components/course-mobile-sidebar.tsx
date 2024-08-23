@@ -37,15 +37,16 @@ interface CourseDataProps {
       _id:string;
     }[];
     isPurchased:boolean;
+    progressPercent:number;
   }
-const CourseMobileSidebar = ({course, progresses, chapters, isPurchased}:CourseMobileSidebarProps) => {
+const CourseMobileSidebar = ({course, progresses, chapters, isPurchased, progressPercent}:CourseMobileSidebarProps) => {
   return (
     <Sheet>
         <SheetTrigger className="md:hidden pr-4 hover:opacity-75 transition">
             <Menu/>
         </SheetTrigger>
         <SheetContent side="left" className="p-0 bg-white w-72">
-            <CourseSidebar course={course} progresses={progresses} chapters={chapters} isPurchased={isPurchased}/>
+            <CourseSidebar course={course} progresses={progresses} chapters={chapters} isPurchased={isPurchased} progressPercent={progressPercent}/>
         </SheetContent>
     </Sheet>
   )

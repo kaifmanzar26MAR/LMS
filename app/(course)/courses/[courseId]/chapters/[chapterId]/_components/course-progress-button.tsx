@@ -28,8 +28,14 @@ const CourseProgressButton = ({chapterId,
             try {
                 const resposne= axios.post(`/api/update_course/${courseId}/${chapterId}/update_chapter`, {isCompleted: !isCompleted});
                 console.log(resposne);
+                
                 toast.success(!isCompleted ? "Marked Completed" : "Marked InCompleted")
+
+                if(nextChapterId){
+                    router.push(`/courses/${courseId}/chapters/${nextChapterId}`);
+                }
                 window.location.reload();
+                
             } catch (error) {
                 console.log(error);
                 toast.error("Something went wrong!")

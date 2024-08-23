@@ -13,7 +13,7 @@ interface ChapterVideoPlayerProps {
   playbackId: string | null;
   isLocked: boolean;
   completedOnEnd: boolean;
-  videoUrl:string;
+  videoUrl: string;
 }
 const ChapterVideoPlayer = ({
   chapterId,
@@ -23,12 +23,12 @@ const ChapterVideoPlayer = ({
   playbackId,
   isLocked,
   completedOnEnd,
-  videoUrl
+  videoUrl,
 }: ChapterVideoPlayerProps) => {
   const [isReady, setIsReady] = useState(false);
-  useEffect(()=>{
-      if(playbackId===null) setIsReady(true);
-  },[playbackId])
+  useEffect(() => {
+    if (playbackId === null) setIsReady(true);
+  }, [playbackId]);
   return (
     <div className="relative aspect-video">
       {!isReady && !isLocked && (
@@ -42,17 +42,27 @@ const ChapterVideoPlayer = ({
           <p className="text-sm">This Chapter is Lock</p>
         </div>
       )}
-      {!isLocked  && (
-        playbackId ? <MuxPlayer
-          title={title}
-          className={cn(!isReady && "hidden")}
-          onCanPlay={() => setIsReady(true)}
-          onEnded={() => {}}
-          autoPlay
-          playbackId={playbackId}
-        /> :
-        <video src={videoUrl} className={cn(!isReady && "hidden")} controls autoPlay title={title}/>
-      )}
+      {
+      !isLocked &&
+        (playbackId ? (
+          <MuxPlayer
+            title={title}
+            className={cn(!isReady && "hidden")}
+            onCanPlay={() => setIsReady(true)}
+            onEnded={() => {}}
+            autoPlay
+            playbackId={playbackId}
+          />
+        ) : (
+          <video
+            src={videoUrl}
+            className={cn(!isReady && "hidden")}
+            controls
+            autoPlay
+            title={title}
+          />
+        ))
+        }
     </div>
   );
 };

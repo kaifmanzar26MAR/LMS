@@ -48,6 +48,7 @@ const CourseLayout = ({
   const [progressData, setProgressData] = useState<ProgressDataProps | null>(
     null
   );
+  const [progressPercent, setProgressPercent] = useState(0);
 
   const fetchCourseData = async () => {
     try {
@@ -60,6 +61,14 @@ const CourseLayout = ({
         ids: courseResponse.data?.chapters,
       });
       setChapters(chapterResponse.data);
+      
+      const completedChapters= chapterResponse.data.filter((chapter:ChapterProps)=>{
+        if(chapter.isCompleted===true){
+          return chapter;
+        }
+      });
+      setProgressPercent(Math.round((completedChapters.length/chapterResponse.data.length)*100))
+
     } catch (error) {
       console.log(error);
     }
@@ -112,6 +121,7 @@ const CourseLayout = ({
           course={course}
           chapters={chapters}
           progresses={progressData.progresses}
+          progressPercent= {progressPercent}
           isPurchased={progressData.isPurchase}
         />
       </div>
@@ -120,6 +130,7 @@ const CourseLayout = ({
           course={course}
           chapters={chapters}
           progresses={progressData.progresses}
+          progressPercent={progressPercent}
           isPurchased={progressData.isPurchase}
         />
       </div>

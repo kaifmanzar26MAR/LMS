@@ -140,7 +140,7 @@ const ChapterIdPage = ({
 
   return (
     <div>
-      {progress?.isCompleted && (
+      {chapterData?.isCompleted && (
         <Banner
           variant="success"
           label="You have already completed this chapter"

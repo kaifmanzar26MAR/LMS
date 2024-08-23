@@ -35,8 +35,9 @@ interface CourseSidebarProps{
       _id:string;
     }[];
     isPurchased:boolean;
+    progressPercent:number;
 }
-const CourseSidebar = ({course, chapters, progresses, isPurchased}:CourseSidebarProps) => {
+const CourseSidebar = ({course, chapters, progresses, isPurchased, progressPercent}:CourseSidebarProps) => {
   if(!course){
     return <>Loading...</>
   }
@@ -50,7 +51,7 @@ const CourseSidebar = ({course, chapters, progresses, isPurchased}:CourseSidebar
       {
         isPurchased && (
           <div className="mt-10">
-            <CourseProgress variant="success" value={progresses.length}/>
+            <CourseProgress variant="success" value={progressPercent}/>
           </div>
         )
       }
