@@ -6,7 +6,7 @@ const purchaseSchema= new Schema({
         required:true,
     },
     courseId:{
-        type:Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"Course"
     }
 },{

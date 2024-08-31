@@ -15,6 +15,18 @@ interface CourseCardProps {
   progress: number;
   category: string;
 }
+
+interface ChapterProps {
+  _id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  position: number;
+  isPublished: boolean;
+  isFree: boolean;
+  courseId: string;
+  isCompleted:boolean;
+}
 const CourseCard = ({
   _id,
   title,
@@ -24,8 +36,8 @@ const CourseCard = ({
   category,
 }: CourseCardProps) => {
   const [chapters, setChapters] = useState([]);
-  const [progress, setProgress]=useState(null);
-
+  const [progressPercent, setProgressPercent]=useState(0);
+  
   useEffect(() => {
     const fetchChapters = async () => {
       try {
@@ -34,6 +46,13 @@ const CourseCard = ({
         });
         setChapters(response.data);
         console.log(response.data);
+
+        const completedChapters= response.data.filter((chapter:ChapterProps)=>{
+          if(chapter.isCompleted===true){
+            return chapter;
+          }
+        });
+        setProgressPercent(Math.round((completedChapters.length/response.data.length)*100))
       } catch (error) {
         console.error("Error fetching chapters:", error);
       }
@@ -67,15 +86,17 @@ const CourseCard = ({
           </div>
         </div>
         {
-            progress!==null ? (
-                <CourseProgress size="sm" value={progress} variant={progress ===100 ? "success" : "default"}/>
+            progressPercent!==null ? (
+                <CourseProgress size="sm" value={progressPercent} variant={progressPercent ===100 ? "success" : "default"}/>
             ):(
                 <p className="text-md md:text-sm font-medium text-slate-700">
                     {formatPrice(price)}
                 </p>
             )
         }
+
       </div>
+
     </Link>
   );
 };

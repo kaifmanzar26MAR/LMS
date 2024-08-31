@@ -8,7 +8,7 @@ const attachmentSchema=new Schema({
         trim:true
     },
     courseId:{
-        type:Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"Course",
         required:true
     },
