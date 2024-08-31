@@ -7,8 +7,11 @@ import { Categories } from "./_components/categories";
 import { SearchInput } from "@/components/search-input";
 import { CourseList } from "./_components/course-list";
 type SearchProps = {
-  title?: string;
+  searchParams:{
+    title?: string;
   categoryId?: string;
+  }
+  
 };
 const Search = ({ searchParams }: SearchProps) => {
   const abort = new AbortController();
