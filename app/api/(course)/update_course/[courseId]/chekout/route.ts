@@ -71,10 +71,6 @@ export async function POST(
             userId:user.id,
         }
     })
-    if(session){
-      course.pruchases.append(user.id);
-      course.save();
-    }
     return NextResponse.json({url:session.url});
   } catch (error) {
     console.log("Payment Error" + error);

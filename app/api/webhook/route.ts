@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import dbConnect from "@/lib/dbConnect";
 import { Purchase } from "@/app/Models/purchase-schema";
+import { Course } from "@/app/Models/course-sechema";
 
 export async function POST(req:Request) {
     const body= await req.text();
@@ -31,10 +32,15 @@ export async function POST(req:Request) {
         if(!userId || !courseId){
             return new NextResponse("Webhook error: Missing Metadata", {status:400})
         }
-        await Purchase.create({
+        const purchaseInstance= await Purchase.create({
             courseId,
             userId
-        })
+        });
+        if(purchaseInstance){
+            const course= await Course.findOne({_id: courseId});
+            course.purchase.append(purchaseInstance._id);
+            course.save();
+        }
     }else {
         return new NextResponse("WebHook Error: Unhandeld event type " + event.type , {status: 200}) // maximum 400 error will stop the stripe automatically
     }
